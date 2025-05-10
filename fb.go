@@ -21,13 +21,19 @@ type FizzBuzz[T any] struct {
 	Rules []Rule[T]
 }
 
-// Play applies the FizzBuzz rules to a single value.
+// Play applies the FizzBuzz rules to the given value.
 //
-// It executes the first rule that matches. If no rule matches, it does nothing.
+// It iterates over the rules in order and executes the first rule that matches.
+// If a matching rule returns a non-nil Action, the Action is executed with the value.
+// If no rule matches or the Action is nil, Play does nothing.
+//
+// This method is safe even if a Rule returns a nil Action.
 func (f *FizzBuzz[T]) Play(val T) {
 	for _, rule := range f.Rules {
 		if act, ok := rule(val); ok {
-			act(val)
+			if act != nil {
+				act(val)
+			}
 			return
 		}
 	}
