@@ -1,12 +1,13 @@
-// Package rules provides preset Rule implementations for use with the fb library.
+// Package rules provides preset Rule implementations for fb.
 //
-// These rules match classic FizzBuzz conditions (e.g., divisible by 3, 5, or 15) and return corresponding actions.
-// A fallback utility rule is also included for default behaviors.
+// Includes standard FizzBuzz rules and utilities like Pass and Fallback.
 //
-// Example usage:
+// Example:
 //
-//	fizzRule := rules.Fizz()
-//	action, ok := fizzRule(6) // ok == true, action prints "Fizz"
+//	rule := rules.Fizz()
+//	if act, ok := rule(3); ok {
+//	    act(3)
+//	}
 package rules
 
 import (

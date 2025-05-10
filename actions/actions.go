@@ -1,12 +1,10 @@
-// Package actions provides preset Action implementations for use with the fb library.
+// Package actions provides preset Action implementations for fb.
 //
-// These include common actions for integer-based FizzBuzz scenarios, such as printing "Fizz", "Buzz",
-// "FizzBuzz", or simply the number itself. It also provides a generic Print action for any type.
+// Includes "Fizz", "Buzz", "FizzBuzz", printing numbers, and a generic Print for any type.
 //
-// Example usage:
+// Example:
 //
-//	fizzAction := actions.Fizz()
-//	fizzAction(3) // Output: Fizz
+//	actions.Fizz()(3) // Output: Fizz
 package actions
 
 import (
@@ -27,28 +25,14 @@ func Buzz() fb.Action[int] { return func(num int) { fmt.Println("Buzz") } }
 // Pass returns an Action that prints the number itself.
 func Pass() fb.Action[int] { return func(num int) { fmt.Println(num) } }
 
-// Print returns an Action that prints any type T.
-//
-// This is useful for custom types.
+// Print returns an Action that prints a value of type T.
 func Print[T any]() fb.Action[T] {
 	return func(a T) {
 		fmt.Println(a)
 	}
 }
 
-// Noop returns a nil Action, which performs no operation when executed.
-//
-// This can be useful when you want to explicitly specify a "do nothing" action
-// in a rule, relying on the fb.Play method to safely skip nil Actions.
-//
-// Example:
-//
-//	rule := func(i int) (fb.Action[int], bool) {
-//	    if i%7 == 0 {
-//	        return actions.Noop[int](), true // Match but do nothing
-//	    }
-//	    return nil, false
-//	}
+// Noop returns a nil Action for type T.
 func Noop[T any]() fb.Action[T] {
 	return nil
 }
