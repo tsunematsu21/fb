@@ -9,14 +9,23 @@ package fb
 type Action[T any] func(T)
 
 // Rule returns an Action and true if the value matches; otherwise, false.
+//
+// A nil Rule is ignored by FizzBuzz.Play.
 type Rule[T any] func(T) (Action[T], bool)
 
-// FizzBuzz holds a list of rules and applies them to values.
+// Action is a function that handles a value of type T.
+//
+// A nil Action is ignored by FizzBuzz.Play.
 type FizzBuzz[T any] struct {
 	rules []Rule[T]
 }
 
-// Play applies rules to val, running the first matching Action if non-nil.
+// Play applies the rules to val and runs the first matching Action, if non-nil.
+//
+// The method is nil-safe:
+//   - If the FizzBuzz instance is nil, it does nothing.
+//   - Nil rules are skipped.
+//   - If a rule matches but returns a nil action, nothing is executed.
 func (f *FizzBuzz[T]) Play(val T) {
 	if f == nil {
 		return

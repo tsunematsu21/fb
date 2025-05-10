@@ -93,3 +93,51 @@ func ExampleFizzBuzz_Play() {
 	// 14
 	// FizzBuzz
 }
+
+func TestNilFizzBuzz(t *testing.T) {
+	var fb *fb.FizzBuzz[int]
+	defer noPanic(t, "Play on nil FizzBuzz")
+	fb.Play(1) // should do nothing, not panic
+}
+
+func TestNilRule(t *testing.T) {
+	fb := fb.New[int](
+		nil,
+		func(i int) (fb.Action[int], bool) {
+			if i%2 == 0 {
+				return func(i int) {}, true
+			}
+			return nil, false
+		},
+	)
+	defer noPanic(t, "Play with nil Rule in rules")
+	fb.Play(2)
+}
+
+func TestNilAction(t *testing.T) {
+	fb := fb.New[int](
+		func(i int) (fb.Action[int], bool) {
+			return nil, true // matching rule, but action is nil
+		},
+	)
+	defer noPanic(t, "Play with Rule returning nil Action")
+	fb.Play(1)
+}
+
+func TestNilRuleAndAction(t *testing.T) {
+	fb := fb.New[int](
+		nil,
+		func(i int) (fb.Action[int], bool) {
+			return nil, true
+		},
+	)
+	defer noPanic(t, "Play with nil Rule and nil Action")
+	fb.Play(1)
+}
+
+// Helper: fails the test if panic occurs
+func noPanic(t *testing.T, name string) {
+	if r := recover(); r != nil {
+		t.Fatalf("%s: unexpected panic: %v", name, r)
+	}
+}
