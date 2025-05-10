@@ -41,3 +41,13 @@ func Pass() fb.Rule[int] {
 func Fallback[T any](a fb.Action[T]) fb.Rule[T] {
 	return func(t T) (fb.Action[T], bool) { return a, true }
 }
+
+// Match creates a rule that applies the given predicate to the value and returns an Action if true.
+func Match[T any](predicate func(T) bool, action fb.Action[T]) fb.Rule[T] {
+	return func(value T) (fb.Action[T], bool) {
+		if predicate(value) {
+			return action, true
+		}
+		return nil, false
+	}
+}
