@@ -8,17 +8,24 @@ package fb
 // Action is a function that processes a value of type T.
 type Action[T any] func(T)
 
-// Rule checks a value and returns an Action (if matched) and a bool indicating a match.
+// Rule returns an Action and true if the value matches; otherwise, false.
 type Rule[T any] func(T) (Action[T], bool)
 
-// FizzBuzz applies rules to values and runs the first matching Action.
+// FizzBuzz holds a list of rules and applies them to values.
 type FizzBuzz[T any] struct {
-	Rules []Rule[T]
+	rules []Rule[T]
 }
 
 // Play applies rules to val, running the first matching Action if non-nil.
 func (f *FizzBuzz[T]) Play(val T) {
-	for _, rule := range f.Rules {
+	if f == nil {
+		return
+	}
+
+	for _, rule := range f.rules {
+		if rule == nil {
+			continue
+		}
 		if act, ok := rule(val); ok {
 			if act != nil {
 				act(val)
@@ -34,5 +41,5 @@ func (f *FizzBuzz[T]) Play(val T) {
 //
 //	fb.New[int](rules.FizzBuzz(), rules.Fizz(), rules.Buzz(), rules.Pass())
 func New[T any](rules ...Rule[T]) *FizzBuzz[T] {
-	return &FizzBuzz[T]{Rules: rules}
+	return &FizzBuzz[T]{rules: rules}
 }
