@@ -35,3 +35,20 @@ func Print[T any]() fb.Action[T] {
 		fmt.Println(a)
 	}
 }
+
+// Noop returns a nil Action, which performs no operation when executed.
+//
+// This can be useful when you want to explicitly specify a "do nothing" action
+// in a rule, relying on the fb.Play method to safely skip nil Actions.
+//
+// Example:
+//
+//	rule := func(i int) (fb.Action[int], bool) {
+//	    if i%7 == 0 {
+//	        return actions.Noop[int](), true // Match but do nothing
+//	    }
+//	    return nil, false
+//	}
+func Noop[T any]() fb.Action[T] {
+	return nil
+}
